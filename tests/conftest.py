@@ -8,7 +8,6 @@ if sys.platform.startswith("win"):
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 import os
-
 from tortoise import Tortoise
 
 MODELS: list[str] = [
@@ -43,7 +42,7 @@ if CERTS.exists():
     if priv.exists():
         os.environ.setdefault("JWT_PRIVATE_KEY", priv.read_text(encoding="utf-8"))
 
-os.environ.setdefault("ALLOWED_HOSTS", "['*']")  # <- допустим пустой список
+os.environ.setdefault("ALLOWED_HOSTS", "['*']")
 
 
 @pytest.fixture(scope="session")
@@ -60,9 +59,6 @@ def init_db():
     loop = asyncio.get_event_loop_policy().new_event_loop()
     asyncio.set_event_loop(loop)
 
-    # Явная инициализация Tortoise с маппингом app -> modules.
-    # Ключ "models" здесь — это app_label, и он же будет использоваться как conn alias,
-    # поэтому ошибки KeyError('models') не будет.
     loop.run_until_complete(
         Tortoise.init(
             db_url=db_url,
@@ -71,12 +67,10 @@ def init_db():
     )
     loop.run_until_complete(Tortoise.generate_schemas())
 
-    yield  # тесты выполняются здесь
+    yield
 
-    # Тидинг ап после завершения тестов
     loop.run_until_complete(Tortoise._drop_databases())
     loop.run_until_complete(Tortoise.close_connections())
-    # сброс голобал стейта tortoise (опционально)
     Tortoise.apps = {}
     loop.close()
 #

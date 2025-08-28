@@ -72,10 +72,10 @@ async def edit_email(schema, user, background_tasks, redis):
 
     check_email_in_db = await User.get_or_none(email=schema.email)
     if check_email_in_db:
-        raise AlreadyExist(message="This email is in use!")
+        raise AlreadyExist(message="This email is in use")
 
     token = random_string()
-    callback_url = f"{settings.DOMAIN_API}/api/user/email/verify/{token}"
+    callback_url = f"{settings.DOMAIN_API}/{settings.API_V1_STR}/user/email/verify/{token}"
     to = user.email or schema.email
     email = Email()
 
@@ -90,7 +90,7 @@ async def edit_email(schema, user, background_tasks, redis):
 async def verify_code_email(token, user, redis) -> User:
     current_email = await redis.get(token)
     if not current_email:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not valid token")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Not valid token")
 
     user.email = current_email
     await user.save()

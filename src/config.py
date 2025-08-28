@@ -1,11 +1,10 @@
-import os
 from functools import lru_cache
 from pathlib import Path
-from typing import Optional
 
-from pydantic import Field, validator, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import field_validator
+from pydantic_settings import BaseSettings
 
+ROOT = Path(__file__).resolve().parents[1]
 MODELS: list[str] = [
     "src.payments.models",
     "src.questions.models",
@@ -16,11 +15,9 @@ MODELS: list[str] = [
     "src.models",
     "aerich.models"
 ]
+DEFAULT_MEDIA_ALLOWED_MIMES = ["image/png", "image/jpeg", "image/jpg", "video/mp4"]
+DEFAULT_MEDIA_MAX_FILE_SIZE = 50 * 1024 * 1024
 
-MEDIA_ALLOWED_MIMES = ["image/png", "image/jpeg", "image/jpg", "video/mp4"]
-MEDIA_MAX_FILE_SIZE = 50 * 1024 * 1024
-
-ROOT = Path(__file__).resolve().parents[1]
 
 
 class Settings(BaseSettings):

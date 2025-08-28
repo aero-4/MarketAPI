@@ -14,15 +14,13 @@ import jwt
 from fastapi import UploadFile, HTTPException
 from fastapi.encoders import jsonable_encoder
 from jwt import ExpiredSignatureError, PyJWTError
-from starlette import status, exceptions
+from starlette import status
 from pathlib import Path
 
 from starlette.responses import JSONResponse
 from src.auth.config import auth_settings
-from src.config import MEDIA_ALLOWED_MIMES, MEDIA_MAX_FILE_SIZE
+from src.config import DEFAULT_MEDIA_ALLOWED_MIMES, DEFAULT_MEDIA_MAX_FILE_SIZE
 from src.models import Attachment
-
-
 
 
 def encode_jwt(payload: dict, private_key: str = auth_settings.JWT_PRIVATE_KEY, algorithm: str = auth_settings.JWT_ALG, expire_minutes: int = auth_settings.ACCESS_TOKEN_EXP,
@@ -79,8 +77,8 @@ def create_slug(text: str) -> str:
 async def save_media(
         file: UploadFile,
         dest_dir: str = "files",
-        max_size: int = MEDIA_MAX_FILE_SIZE,
-        allowed_types: list[str] = MEDIA_ALLOWED_MIMES
+        max_size: int = DEFAULT_MEDIA_MAX_FILE_SIZE,
+        allowed_types: list[str] = DEFAULT_MEDIA_ALLOWED_MIMES
 ) -> str:
     if not file.content_type or file.content_type not in allowed_types:
         raise HTTPException(
@@ -137,7 +135,6 @@ def response(status: int = 200, **kwargs) -> JSONResponse:
     logging.debug(f"Response - %s", result)
 
     return JSONResponse(status_code=status, content=result)
-
 
 
 async def update_object_media(objects: list, key: str = "id") -> list:

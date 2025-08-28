@@ -23,25 +23,27 @@ app = FastAPI(
     root_path=settings.API_V1_STR
 )
 
-# @app.on_event("startup")
-# async def startup_event():
-#     global redis_client
-#     redis_client = get_redis()
-#     try:
-#         await redis_client.ping()
-#         print("Redis connected")
-#     except Exception as exc:
-#         print("Warning: Redis unavailable:", exc)
-#         redis_client = None
-#
-#
-# @app.on_event("shutdown")
-# async def shutdown_event():
-#     global redis_client
-#     if redis_client:
-#         await redis_client.close()
-#         await redis_client.connection_pool.disconnect()
-#         print("Redis closed")
+
+@app.on_event("startup")
+async def startup_event():
+    global redis_client
+    redis_client = get_redis()
+    try:
+        await redis_client.ping()
+        print("Redis connected")
+    except Exception as exc:
+        print("Warning: Redis unavailable:", exc)
+        redis_client = None
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    global redis_client
+    if redis_client:
+        await redis_client.close()
+        await redis_client.connection_pool.disconnect()
+        print("Redis closed")
+
 
 for r in routers:
     app.include_router(r)
