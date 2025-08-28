@@ -1,7 +1,7 @@
 ## MarketplaceAPI
 
 Backend Pet Project
-FastAPI/PostgresSQL/TortoiseORM/Redis
+stack: FastAPI/PostgresSQL/TortoiseORM/Redis
 
 1. [x] Авторизация/Регистрация
 	1. [x] Отправить код смс через сервис Notisend
