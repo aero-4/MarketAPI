@@ -11,22 +11,18 @@ async def get_summa_orders_cart(orders) -> int:
     for o in orders:
         item = await o.item
         summa += item.price
-
     return summa
 
 
-async def update_status(orders) -> None:
+async def update_status_and_address(orders, delivery_address) -> None:
     for o in orders:
         o.status = OrderStatus.WAITING
+        o.delivery_address = delivery_address
         await o.save()
 
 
-async def confirm_orders(user) -> User:
+async def buy_confirm_orders(schema, user) -> User:
     async with in_transaction():
-        await Order.create(
-            user=user,
-            status=OrderStatus.IN_CART
-        )
         orders = await Order.filter(status=OrderStatus.IN_CART, user=user).all()
         if len(orders) <= 0:
             raise HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail="Empty cart")
@@ -39,10 +35,10 @@ async def confirm_orders(user) -> User:
 
         user.balance = new_balance_user
         await user.save()
-        await update_status(orders)
+        await update_status_and_address(orders, schema.address)
 
     return user
 
 
-async def get_all_orders(user):
+async def get_all_orders(user) -> list:
     return await Order.filter(user=user).all()

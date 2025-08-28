@@ -30,13 +30,13 @@ class User(Model):
     role = fields.IntField(default=UserRoles.USER.value)
 
     def __str__(self):
-        return f'User: {self.id}/{self.phone}/{self.date_at}'
+        return f'User: {self.id} / {self.phone}'
 
 
-class UserAddress(Model):
-    id = fields.IntField(pk=True, generated=True)
-    user = fields.ForeignKeyField("models.User")
-    address = fields.CharField(max_length=512)
+# class UserAddress(Model):
+#     id = fields.IntField(pk=True, generated=True)
+#     user = fields.ForeignKeyField("models.User")
+#     address = fields.CharField(max_length=512)
 
 
 class Media(Model):

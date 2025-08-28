@@ -18,6 +18,7 @@ class Order(Model):
     update_at = fields.DatetimeField(auto_now=True)
 
     delivery_date = fields.DateField(null=True)
+    delivery_address = fields.CharField(max_length=256)
     status = fields.IntEnumField(OrderStatus)
 
     user = fields.ForeignKeyField("models.User", related_name="orders_bought")

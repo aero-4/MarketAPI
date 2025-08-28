@@ -2,9 +2,10 @@ from functools import lru_cache
 from pathlib import Path
 
 from pydantic import field_validator
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ROOT = Path(__file__).resolve().parents[1]
+
 MODELS: list[str] = [
     "src.payments.models",
     "src.questions.models",
@@ -17,7 +18,6 @@ MODELS: list[str] = [
 ]
 DEFAULT_MEDIA_ALLOWED_MIMES = ["image/png", "image/jpeg", "image/jpg", "video/mp4"]
 DEFAULT_MEDIA_MAX_FILE_SIZE = 50 * 1024 * 1024
-
 
 
 class Settings(BaseSettings):
@@ -50,6 +50,11 @@ class Settings(BaseSettings):
         if isinstance(v, str):
             return [h.strip() for h in v.split(",") if h.strip()]
         return v
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8"
+    )
 
 
 @lru_cache()

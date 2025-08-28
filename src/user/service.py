@@ -6,7 +6,7 @@ from starlette import status
 
 from src.config import settings
 from src.exceptions import NotFound, AlreadyExist
-from src.models import UserAddress, User
+from src.models import User
 from src.services.codes.email import Email
 from src.services.codes.phone import Phone
 from src.user.constants import ALLOWED_TYPES_PROFILE_PHOTO
@@ -17,28 +17,6 @@ async def edit_photo(photo, user):
     file_path = await save_media(photo, ALLOWED_TYPES_PROFILE_PHOTO)
     user.photo = file_path
     await user.save()
-
-
-async def get_all_addresses(user):
-    addresses = await UserAddress.filter(user_id=user.id).values()
-    return addresses
-
-
-async def add_address(schema, user):
-    address = await UserAddress.get_or_create(
-        address=schema.address,
-        user=user
-    )
-    return address
-
-
-async def remove_address(schema, user):
-    address = await UserAddress.get_or_none(address=schema.address, user_id=user.id)
-    if not address:
-        raise NotFound()
-
-    deleted = await address.delete()
-    return bool(deleted)
 
 
 async def edit_phone(schema, user, background_tasks, redis):

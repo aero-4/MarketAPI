@@ -5,7 +5,7 @@ from src.middlewares.ratelimit import rate_limit, get_redis
 from src.session.depends import validate_access_token
 from src.models import User
 from src.user.schemas import AddressSchema
-from src.user.service import edit_photo, get_all_addresses, add_address, remove_address, edit_phone, verify_code_phone, edit_email, verify_code_email
+from src.user.service import edit_photo, edit_phone, verify_code_phone, edit_email, verify_code_email
 from src.utils import response
 
 user_router = APIRouter(prefix="/users", tags=["Users"])
@@ -26,7 +26,7 @@ async def user_info_handler(user: User = Depends(validate_access_token)):
     ).model_dump()
 
 
-@user_router.post("/photo/edit")
+@user_router.patch("/photo/edit")
 async def edit_photo_handler(
         photo: UploadFile = File(...),
         user: User = Depends(validate_access_token)
@@ -34,27 +34,6 @@ async def edit_photo_handler(
     user_changed = await edit_photo(photo, user)
     return response(status.HTTP_200_OK,
                     data={"photo": user_changed.photo})
-
-
-@user_router.post("/address/all")
-async def verify_code_email_handler(user: User = Depends(validate_access_token)):
-    addresses_data = await get_all_addresses(user)
-    return response(status.HTTP_200_OK,
-                    data=addresses_data)
-
-
-@user_router.post("/address/add")
-async def verify_code_email_handler(schema: AddressSchema, user: User = Depends(validate_access_token)):
-    added_address = await add_address(schema, user)
-    return response(status.HTTP_200_OK,
-                    data={"address": added_address})
-
-
-@user_router.post("/address/remove")
-async def verify_code_email_handler(schema: AddressSchema, user: User = Depends(validate_access_token)):
-    await remove_address(schema, user)
-    return response(status.HTTP_200_OK,
-                    message=f"Removed address")
 
 
 @user_router.post("/phone/edit")
