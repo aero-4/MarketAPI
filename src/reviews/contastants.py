@@ -1,0 +1,1 @@
+MAX_LIMIT_REVIEWS: int = 40
