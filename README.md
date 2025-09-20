@@ -2,9 +2,8 @@
 
 ## Backend Pet Project
 
-### Stack: FastAPI/PostgresSQL/TortoiseORM/Redis
-
-Цель: создать апи для маркетплейса продажи разных товаров
+###Stack: FastAPI/PostgresSQL/TortoiseORM/Redis
+###Цель: создать апи для маркетплейса продажи разных товаров
 
 Задачи:
 1. [x] Авторизация/Регистрация
