@@ -1,11 +1,12 @@
 # MarketplaceAPI
 
-### Stack: FastAPI/PostgresSQL/TortoiseORM/Redis/Pydantic/hashlib/PyJWT/Aerich
 ### Цель: создать апи для маркетплейса по продажам разных товаров 
 
+### Stack: FastAPI/PostgresSQL/TortoiseORM/Redis/Pydantic/hashlib/PyJWT/Aerich
+
 ## Запуск:
-1. указать переменные в .env файл
-2. запустить - `python uvicorn app.py --reload`
+1. указать переменные из config.py в .env файл
+2. запустить - `python uvicorn app.py --reload` или `python main.py`
 
 ## Выполненные задачи:
 1. [x] Авторизация/Регистрация
